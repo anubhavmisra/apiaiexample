@@ -3,7 +3,7 @@ var stringify = require('json-stringify');
 
 var app = express();
 
-app.get('/api/weather', function(req, res) {
+app.post('/api/weather', function(req, res) {
   var response = 'This is a sample response from your webhook!'; //Default response from the webhook to show it's working
 
   res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
