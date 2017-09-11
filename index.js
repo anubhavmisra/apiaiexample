@@ -5,9 +5,9 @@ var app = express();
 
 app.post('/api/weather', function(req, res) {
   // Get the city and date from the request
+  console.log(req);
   var city = req.body.result.parameters['geo-city']; // city is a required param
   // Get the date for the weather forecast (if present)
-  console.log(req);
   var date = '';
   if (req.query.date) {
     date = req.query.date;
