@@ -1,12 +1,13 @@
 var express = require('express');
 var stringify = require('json-stringify');
 var bodyParser = require('body-parser');
+
+var app = express();
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 })); 
 
-var app = express();
 
 app.post('/api/weather', function(req, res) {
   // Get the city and date from the request
