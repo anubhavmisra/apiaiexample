@@ -6,7 +6,7 @@ var app = express();
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
-})); 
+}));
 
 // Copyright 2017, Google, Inc.
 // Licensed under the Apache License, Version 2.0 (the 'License');
@@ -43,10 +43,10 @@ function callWeatherApi (city, date) {
         let conditions = response['data']['current_condition'][0];
         let currentConditions = conditions['weatherDesc'][0]['value'];
         // Create response
-        let output = `Current conditions in the ${location['type']} 
+        let output = `Current conditions in the ${location['type']}
         ${location['query']} are ${currentConditions} with a projected high of
-        ${forecast['maxtempC']}°C or ${forecast['maxtempF']}°F and a low of 
-        ${forecast['mintempC']}°C or ${forecast['mintempF']}°F on 
+        ${forecast['maxtempC']}°C or ${forecast['maxtempF']}°F and a low of
+        ${forecast['mintempC']}°C or ${forecast['mintempF']}°F on
         ${forecast['date']}.`;
         // Resolve the promise with the output text
         console.log(output);
@@ -84,13 +84,23 @@ app.post('/api/order', function(req, res) {
   // Get the city and date from the request
   console.log(req.body);
   var product = req.body.result.parameters['product']; // product is a required param
+  var quantity = req.body.result.parameters['quantity'];
   //var brand = req.body.result.parameters['brand']; // brand is a required param
+  //var response = 'I have added ' + product + ' to your basket(Not really).'; //Default response from the webhook to show it's working
+  var response = 'I have found multiple products.';
 
-  var response = 'I have added ' + product + ' to your basket(Not really).'; //Default response from the webhook to show it's working
-  
   res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
   res.send(stringify({ "speech": response, "displayText": response
   //"speech" is the spoken version of the response, "displayText" is the visual version
+  //"followupEvent" to send the user to the next step
+    "followupEvent": {
+      "name": "MultipleResults",
+      "data": {
+         "result1":"TestResult1",
+         "result2":"TestResult2",
+         "result3":"TestResult3",
+      }
+   }
   }));
 });
 
