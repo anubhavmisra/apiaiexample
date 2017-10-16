@@ -90,7 +90,7 @@ app.post('/api/order', function(req, res) {
   var response = 'I have found multiple products.';
 
   res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
-  res.send(stringify({ "speech": response, "displayText": response
+  res.send(stringify({ "speech": response, "displayText": response,
   //"speech" is the spoken version of the response, "displayText" is the visual version
   //"followupEvent" to send the user to the next step
     "followupEvent": {
