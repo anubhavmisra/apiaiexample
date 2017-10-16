@@ -96,9 +96,9 @@ app.post('/api/order', function(req, res) {
     "followupEvent": {
       "name": "MultipleResults",
       "data": {
-         "result1":"TestResult1",
-         "result2":"TestResult2",
-         "result3":"TestResult3",
+         "result1": "TestResult1",
+         "result2": "TestResult2",
+         "result3": "TestResult3"
       }
    }
   }));
