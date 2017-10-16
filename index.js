@@ -86,20 +86,26 @@ app.post('/api/order', function(req, res) {
   var product = req.body.result.parameters['product']; // product is a required param
   var quantity = req.body.result.parameters['quantity'];
   //var brand = req.body.result.parameters['brand']; // brand is a required param
-  //var response = 'I have added ' + product + ' to your basket(Not really).'; //Default response from the webhook to show it's working
-  var response = 'I have found multiple products.';
+
+
+  if(product === "bread"){
+    var response = 'I have found multiple products.';
+
+    //"followupEvent" to send the user to the next step
+    var responseJson = stringify({ "speech": response, "displayText": response, "followupEvent": {
+        "name": "product_multiple_results",
+        "data": {
+           "products": ["White cheap bread", "Fancy artisan bread", "Sourdough"]
+        }
+      }});
+  } else {
+    //"speech" is the spoken version of the response, "displayText" is the visual version
+    var response = 'I have added ' + product + ' to your basket(Not really).'; //Default response from the webhook to show it's working
+    var responseJson = stringify({ "speech": response, "displayText": response});
+  }
 
   res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
-  res.send(stringify({ "speech": response, "displayText": response,
-  //"speech" is the spoken version of the response, "displayText" is the visual version
-  //"followupEvent" to send the user to the next step
-    "followupEvent": {
-      "name": "MultipleResults",
-      "data": {
-         "products": ["TestResult1", "TestResult2", "TestResult3"]
-      }
-   }
-  }));
+  res.send(responseJson);
 });
 
 app.listen(process.env.PORT || 3001);
