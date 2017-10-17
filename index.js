@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 
-const dialogflowClientKey = process.env.DF_CLIENT_KEY || 'XXtestXX';
+//const dialogflowClientKey = process.env.DF_CLIENT_KEY || 'XXtestXX';
 
 function callSearch(query){
   return new Promise((resolve, reject) => {
@@ -31,6 +31,7 @@ function callSearch(query){
   });
 }
 
+
 app.post('/api/order', function(req, res) {
   // Get the city and date from the request
   console.log(req.body);
@@ -39,27 +40,27 @@ app.post('/api/order', function(req, res) {
   //var brand = req.body.result.parameters['brand']; // brand is a required param
 
   callSearch(product).then((output) => {
-    // console.log("output length " + output.data.length);
-    // console.log(output);
     if(output.data.length > 1){
       var response = 'I have found multiple products.';
+      var productNames = output.data.map(function(product, index, array){return product.nm});
 
       //"followupEvent" to send the user to the next step
       var responseJson = stringify({ "speech": response, "displayText": response, "followupEvent": {
-          "name": "product_multiple_results",
-          "data": {
-             //"products": ["White cheap bread", "Fancy artisan bread", "Sourdough"]
-             "products":output.data
-          }
-        }});
+        "name": "product_multiple_results",
+        "data": {
+           "products":productNames
+        }
+      }});
     } else if (output.data.length == 1){
       //TODO: add this product to the basket
 
       //"speech" is the spoken version of the response, "displayText" is the visual version
-      var response = 'I have added \'' + output.data[0].nm + '\' to your basket(Not really).'; //Default response from the webhook to show it's working
+      //Default response: show added product name
+      var response = 'I have added \'' + output.data[0].nm + '\' to your basket(Not really).';
       var responseJson = stringify({ "speech": response, "displayText": response});
     } else if (output.data.length < 1){
-      var response = 'I could not find any results for ' + product + '.'; //Default response from the webhook to show it's working
+      //Default response: no results
+      var response = 'I could not find any results for ' + product + '.';
       var responseJson = stringify({ "speech": response, "displayText": response});
     }
 
