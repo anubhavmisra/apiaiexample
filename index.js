@@ -42,13 +42,15 @@ app.post('/api/order', function(req, res) {
   callSearch(product).then((output) => {
     if(output.data.length > 1){
       var response = 'I have found multiple products.';
-      var productNames = output.data.map(function(product, index, array){return product.nm});
+      var productNames = output.data.map(function(product, index, array){
+        return (index + 1) + '. ' +  product.nm;
+      });
 
       //"followupEvent" to send the user to the next step
       var responseJson = stringify({ "speech": response, "displayText": response, "followupEvent": {
         "name": "product_multiple_results",
         "data": {
-           "products":productNames
+           "products":productNames.slice(0,3)
         }
       }});
     } else if (output.data.length == 1){
