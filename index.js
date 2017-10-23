@@ -33,11 +33,49 @@ function callSearch(query){
 
 
 app.post('/api/order', function(req, res) {
-  // Get the city and date from the request
   console.log(req.body);
+
+  //switch up logic based on "action" parameter
+  var action = req.body.result.action;
+  if(action === 'MultipleResults-selectnumber'){
+    handleSelectNumber(req, res);
+
+  } else if (action === 'add.product'){
+    handleProductSearch(req, res);
+  }
+});
+
+function handleSelectNumber(req, res){
+  var selectedNumber =  req.body.result.parameters['selectedNumber'];
+  var products = req.body.contexts[0].parameters['products'];
+  var selectedProduct = products[selectedNumber].slice(2, end);
+  callSearch(selectedProduct).then((output) => {
+    if (output.data.length == 1){
+      //TODO: add this product to the basket
+
+      //"speech" is the spoken version of the response, "displayText" is the visual version
+      //Default response: show added product name
+      var response = 'I have added \'' + output.data[0].nm + '\' to your basket(Not really).';
+      var responseJson = stringify({ "speech": response, "displayText": response});
+    } else {
+      //FIXME We do not like this case. The product should be found by the select
+      var response = 'There are an unexpected number of results for ' + selectedProduct + '.';
+      var responseJson = stringify({ "speech": response, "displayText": response});
+
+    }
+    res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
+    res.send(responseJson);
+  }).catch((error) => {
+    console.log(error);
+    // If there is an error let the user know
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ 'speech': error, 'displayText': error }));
+  });
+}
+
+function handleProductSearch(req, res){
   var product = req.body.result.parameters['product']; // product is a required param
-  var quantity = req.body.result.parameters['quantity'];
-  //var brand = req.body.result.parameters['brand']; // brand is a required param
+  //var quantity = req.body.result.parameters['quantity'];
 
   callSearch(product).then((output) => {
     if(output.data.length > 1){
@@ -74,8 +112,6 @@ app.post('/api/order', function(req, res) {
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify({ 'speech': error, 'displayText': error }));
   });
-
-
-});
+}
 
 app.listen(process.env.PORT || 3001);
