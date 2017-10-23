@@ -48,7 +48,7 @@ app.post('/api/order', function(req, res) {
 function handleSelectNumber(req, res){
   var selectedNumber =  req.body.result.parameters['selectedNumber'];
   var products = req.body.result.contexts[0].parameters['products'];
-  var selectedProduct = products[selectedNumber].slice(2);
+  var selectedProduct = products[selectedNumber - 1].slice(2);
   callSearch(selectedProduct).then((output) => {
     if (output.data.length == 1){
       //TODO: add this product to the basket
