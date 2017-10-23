@@ -40,7 +40,8 @@ app.post('/api/order', function(req, res) {
   if(action === 'MultipleResults-selectnumber'){
     handleSelectNumber(req, res);
 
-  } else if (action === 'add.product'){
+  } else {
+    //Searching for a product is the default behaviour
     handleProductSearch(req, res);
   }
 });
