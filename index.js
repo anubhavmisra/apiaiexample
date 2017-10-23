@@ -47,7 +47,7 @@ app.post('/api/order', function(req, res) {
 
 function handleSelectNumber(req, res){
   var selectedNumber =  req.body.result.parameters['selectedNumber'];
-  var products = req.body.contexts[0].parameters['products'];
+  var products = req.body.result.contexts[0].parameters['products'];
   var selectedProduct = products[selectedNumber].slice(2, end);
   callSearch(selectedProduct).then((output) => {
     if (output.data.length == 1){
